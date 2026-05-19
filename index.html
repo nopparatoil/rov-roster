@@ -1,0 +1,390 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ROV Tournament Roster</title>
+<link href="https://fonts.googleapis.com/css2?family=Rajdhani:wght@400;500;600;700&family=Sarabun:wght@300;400;500;600&family=Orbitron:wght@700;900&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg-deep: #03060f;
+    --bg-card: #080e1e;
+    --bg-card2: #0b1225;
+    --blue-vivid: #00a8ff;
+    --blue-mid: #0066cc;
+    --blue-dim: #003a7a;
+    --blue-glow: rgba(0,168,255,0.18);
+    --blue-glow2: rgba(0,168,255,0.07);
+    --accent: #00d4ff;
+    --accent2: #0080ff;
+    --text-primary: #e8f4ff;
+    --text-secondary: #7ba8cc;
+    --text-dim: #3a5a7a;
+    --border: rgba(0,168,255,0.15);
+    --border-bright: rgba(0,168,255,0.4);
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    background: var(--bg-deep);
+    color: var(--text-primary);
+    font-family: 'Sarabun', sans-serif;
+    min-height: 100vh;
+    overflow-x: hidden;
+  }
+
+  /* grid bg pattern */
+  body::before {
+    content: '';
+    position: fixed;
+    inset: 0;
+    background-image:
+      linear-gradient(rgba(0,168,255,0.04) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(0,168,255,0.04) 1px, transparent 1px);
+    background-size: 40px 40px;
+    pointer-events: none;
+    z-index: 0;
+  }
+
+  /* ambient glow orbs */
+  body::after {
+    content: '';
+    position: fixed;
+    width: 600px; height: 600px;
+    border-radius: 50%;
+    background: radial-gradient(circle, rgba(0,80,180,0.12) 0%, transparent 70%);
+    top: -200px; left: -200px;
+    pointer-events: none;
+    z-index: 0;
+  }
+
+  .glow-orb-right {
+    position: fixed;
+    width: 500px; height: 500px;
+    border-radius: 50%;
+    background: radial-gradient(circle, rgba(0,60,160,0.1) 0%, transparent 70%);
+    bottom: -150px; right: -150px;
+    pointer-events: none;
+    z-index: 0;
+  }
+
+  .wrapper { position: relative; z-index: 1; max-width: 1280px; margin: 0 auto; padding: 2rem 1.5rem 4rem; }
+
+  /* ── HEADER ── */
+  .header { text-align: center; padding: 3rem 0 2.5rem; position: relative; }
+
+  .header-eyebrow {
+    font-family: 'Orbitron', monospace;
+    font-size: 11px;
+    letter-spacing: 6px;
+    color: var(--blue-vivid);
+    text-transform: uppercase;
+    margin-bottom: 1rem;
+    opacity: 0.8;
+  }
+
+  .header-title {
+    font-family: 'Orbitron', monospace;
+    font-size: clamp(28px, 5vw, 52px);
+    font-weight: 900;
+    line-height: 1;
+    letter-spacing: 2px;
+    background: linear-gradient(135deg, #ffffff 0%, var(--accent) 50%, var(--accent2) 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    margin-bottom: 0.5rem;
+  }
+
+  .header-sub {
+    font-family: 'Rajdhani', sans-serif;
+    font-size: 15px;
+    color: var(--text-secondary);
+    letter-spacing: 3px;
+    text-transform: uppercase;
+  }
+
+  .header-line {
+    width: 120px; height: 1px;
+    background: linear-gradient(90deg, transparent, var(--blue-vivid), transparent);
+    margin: 1.5rem auto 0;
+  }
+
+  /* ── STATS BAR ── */
+  .stats-bar {
+    display: flex;
+    justify-content: center;
+    gap: 2rem;
+    margin: 2rem 0 3rem;
+    flex-wrap: wrap;
+  }
+
+  .stat-pill {
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    border-radius: 4px;
+    padding: 10px 24px;
+    text-align: center;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .stat-pill::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 1px;
+    background: linear-gradient(90deg, transparent, var(--blue-vivid), transparent);
+  }
+
+  .stat-num {
+    font-family: 'Orbitron', monospace;
+    font-size: 22px;
+    font-weight: 700;
+    color: var(--accent);
+    line-height: 1;
+  }
+
+  .stat-label {
+    font-size: 11px;
+    letter-spacing: 2px;
+    color: var(--text-secondary);
+    text-transform: uppercase;
+    margin-top: 4px;
+  }
+
+  /* ── TEAMS GRID ── */
+  .teams-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+    gap: 20px;
+  }
+
+  /* ── TEAM CARD ── */
+  .team-card {
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    overflow: hidden;
+    position: relative;
+    transition: border-color 0.3s, box-shadow 0.3s;
+  }
+
+  .team-card:hover {
+    border-color: var(--border-bright);
+    box-shadow: 0 0 30px var(--blue-glow), inset 0 0 30px var(--blue-glow2);
+  }
+
+  .team-card::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 2px;
+    background: linear-gradient(90deg, transparent, var(--blue-vivid), var(--accent), transparent);
+    opacity: 0;
+    transition: opacity 0.3s;
+  }
+
+  .team-card:hover::before { opacity: 1; }
+
+  /* corner decorations */
+  .team-card::after {
+    content: '';
+    position: absolute;
+    top: 0; right: 0;
+    width: 40px; height: 40px;
+    border-top: 1px solid var(--border-bright);
+    border-right: 1px solid var(--border-bright);
+    border-radius: 0 6px 0 0;
+    pointer-events: none;
+  }
+
+  .team-header {
+    padding: 14px 18px 12px;
+    background: var(--bg-card2);
+    border-bottom: 1px solid var(--border);
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    position: relative;
+  }
+
+  .team-num {
+    font-family: 'Orbitron', monospace;
+    font-size: 10px;
+    font-weight: 700;
+    color: var(--blue-dim);
+    letter-spacing: 1px;
+    position: absolute;
+    top: 8px; right: 14px;
+  }
+
+  .team-icon-wrap {
+    width: 34px; height: 34px;
+    border: 1px solid var(--border-bright);
+    border-radius: 4px;
+    display: flex; align-items: center; justify-content: center;
+    background: var(--blue-glow);
+    flex-shrink: 0;
+  }
+
+  .team-icon-wrap svg { width: 16px; height: 16px; fill: var(--blue-vivid); }
+
+  .team-name {
+    font-family: 'Rajdhani', sans-serif;
+    font-size: 16px;
+    font-weight: 700;
+    color: var(--text-primary);
+    letter-spacing: 1px;
+    line-height: 1.2;
+  }
+
+  .team-meta {
+    font-size: 11px;
+    color: var(--text-secondary);
+    letter-spacing: 1px;
+    margin-top: 2px;
+  }
+
+  /* ── PLAYER ROWS ── */
+  .player-list { padding: 6px 0; }
+
+  .player-row {
+    display: flex;
+    align-items: center;
+    padding: 7px 18px;
+    gap: 10px;
+    border-bottom: 1px solid rgba(0,168,255,0.05);
+    transition: background 0.15s;
+  }
+
+  .player-row:last-child { border-bottom: none; }
+  .player-row:hover { background: rgba(0,168,255,0.05); }
+
+  .player-num {
+    font-family: 'Orbitron', monospace;
+    font-size: 9px;
+    color: var(--text-dim);
+    width: 14px;
+    flex-shrink: 0;
+    text-align: right;
+  }
+
+  .player-divider {
+    width: 1px; height: 20px;
+    background: var(--border);
+    flex-shrink: 0;
+  }
+
+  .player-name {
+    font-size: 13.5px;
+    font-weight: 400;
+    color: var(--text-primary);
+    flex-shrink: 0;
+  }
+
+  .player-sep {
+    font-size: 11px;
+    color: var(--text-dim);
+    flex-shrink: 0;
+  }
+
+  .player-char {
+    font-family: 'Rajdhani', sans-serif;
+    font-size: 12px;
+    font-weight: 600;
+    color: var(--accent);
+    letter-spacing: 0.5px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    min-width: 0;
+  }
+</style>
+</head>
+<body>
+<div class="glow-orb-right"></div>
+<div class="wrapper">
+  <header class="header">
+    <div class="header-eyebrow">Arena of Valor · Tournament</div>
+    <h1 class="header-title">ROV ROSTER</h1>
+    <div class="header-sub">รายชื่อนักแข่งทั้งหมด</div>
+    <div class="header-line"></div>
+  </header>
+
+  <div class="stats-bar" id="statsBar"></div>
+
+  <div class="teams-grid" id="grid"></div>
+</div>
+
+<script>
+const teams = [
+  { name: "เพื่อไร", players: [["วรรณกร ยืนนาน","ชอบบบนอนนน"],["นพรัตน์ อุ่นจิตติ","ชอบเอาาา"],["กิติคุณ วงษ์ธัญกรณ์","ชอบมะะะ"],["สมชาติ บุญเต็ม","ชอบบบยืนนน"],["อภิพงษ์ เผือกอิ่ม","ชอบแจก"],["นายสุรชัย สิรปรีดา","ชอบบถั่ว"],["ศุภวัสส์ กลัดสมบูรณ์","ชอบลืมมม"]] },
+  { name: "ภูมิใจไร", players: [["ณัฐพงษ์ มลาเวช","ไข่มโหฬาร"],["นครินทร์ พรมนิล","สมิงเดช"],["ธนาดล เพชร์ศรี","llมวlป้า"],["ชลธิชา เสนศรี","เฉ่โป้โบ่โบ่ก๊า"],["ธีรยุทธ รักษ์ผดุงพล","Kiss'กะปู้"],["เดชา เนื่องจำนงค์","ไม่ชอบ!!"],["เกรียงศักดิ์ คล้ายทอง","น้องเปิ้ลน่ารัก"],["นิศารัตน์ ปัตตายะสัง","ถั่วลันเตากินแล้วอ้วน"],["ฐิติภูมิ ชัยศรีสวัสดิ์สุข","I am not great"]] },
+  { name: "อะไหล่วัยรุ่น", players: [["พิสิฐ สุริยะจันทร์","ρєтєя"],["วัชรพงศ์ จรัสศรี","BT-Guardian"],["อรสินี อินทร์ภิรมย์","กินข้าวยังค่าา?"],["สิทธิโชค เกตุจำนงค์","Kanoomwhan"],["ชลากร มาตรเขียว","ไม้เอ๊กไม้เอก"],["สุรศักดิ์ โพธิกุล","FatD"],["อธิชา หวังหมู่กลาง","Xpy;"],["ชลดา พรหมมาตร","FFINFFERR"]] },
+  { name: "Nava Thanee แชมป์เก่า", players: [["สุริยะ กลิ่นสุทโธ","€apt.$r¥"],["เชษฐา เทศผล","***PeakPoon***"],["วีรวุฒิ พุฒธรรม","อาหลง"],["กฤติกรณ์ คงพันธุ์","ThunderLift"],["ธันวา เจะแวนายี","Zuihoou"],["Kittiphat Jandapuech","AlittleB"],["Jakkrit Chompoobut","•Jc•Golf•"],["Jiratchaya Kostseanlee","~ทะเลที่แปลว่าหมา"]] },
+  { name: "Kamala Thanee", players: [["Adunwit Thongoum","Albelle"],["Khongkrit Kluaithong","~qup~"],["Ekachai Chaimontree","สุดหล่อออทิสติค"],["Tawatchai Intakomwong","ฮาเมาคลื่น"],["Nirawit Rachatamma","เป็นรูปปืน"],["Yanyong Sangkaew","iOlive^_*"],["Kantaphon Sooksri","อาหวัง!!"],["Taweesak Rachmuangkhang","อ๊อดๆแจ๊กกิ้งแกร๊ด"],["Pongsatorn Mayeb","﷼วา€ร้า€﷼"]] },
+  { name: "ลูกแม่น้อง promax", players: [["พงษ์พิสุทธิ์ พิสุทธิพงษ์","Faaaz"],["ศิริวัฒน์ ศรีลาพันธุ์","KING$Jos"],["วิภาดา งามสม","Naenayzanaruk"],["อิสรา ศรีรอด","Itstop"],["พงศธร ศิริวิริยะพงศ์","Andewthegun"],["อนิวรรตน์ ป้านสำราญ","CaptAni_LP"],["กฤษกร เกียรติธีรชัย","ZEa"],["ภาสกร บางผึ้ง","มาจ้ามืออาชีพ"]] },
+  { name: "ตะวันแดงสาดแสงส่อง", players: [["ยศวีร์ ตันกิมหงษ์","แสงแสดที่แปดนาฬิกา"],["ณัฐวุฒิ สิงห์ทอง","[KD]MVPlaY"],["วิรชา อยู่สมบูรณ์","MuYummY"],["ชนม์ชาติ ด้วงเมฆ",".24Feb"],["นภเกตภ์ ศันสนะบวร","ffongbeer_r"],["กุลนาถ ปิ่นประดับ","อะโวคาโดหอมนม"]] },
+  { name: "สมศรีขี่มีโอ", players: [["บัณฑิต จะเต","KAMIKAZE"],["อภิสิทธิ์ ยงขามป้อม","แน่นอนน้องง"],["วัลลภ ขาวทองสุข","Wallop"],["ปัญจพล ขวัญคำ","มาแจกจะแบกทำไม)"],["ธรรมภรณ์ มานะวงษ์สกุล","DENDEKDON"],["ณัฐนนท์ ธรรมวัฒนะ","Bedylnwza"],["กนกภรณ์ เผือกพันด่อน","เฮลมี๊~พลีส"],["นรา ซำเซ็น","FA_LA_NUT"],["บุญญฤทธิ์ ศรีทองใบ","BoonSlayerX"],["ธนวัฒน์ พลอำนวย","—CoCo—"]] },
+  { name: "กล้าทำไร", players: [["ปิยะ ผัดวงค์","eDoks"],["ยงยุทธ ผัดวงค์","ปากคอเรๅะร้าย"],["ถิรวัฒน์ เจริญรื่น","ชอบบวิ่งง"],["วัชรา วิจิตรานนท์","꧁วัยรุ่น1ขีด꧂"],["วรวิทย์ อุ่นวิจิตร","กากปัจเจก"],["อานนท์ เอี่ยมเฟี้ยม","Nepetyo"],["กมลชนก ศรีลา","ᴢᴜᴘᴇʀƪɴᴜɪɪᴢ"],["นพรัตน์ อุยวรรณัง","8KH"],["เอนก ปานบุญห้อม","ตัวละครลับ"]] },
+  { name: "SeaMA", players: [["สหภาพ สระทองคง","ลูกคุณหนู"],["พงศกร ปินตาวงค์","บาบาเชคี"],["ชินวัตร โกเมศ","ChiLuBa"],["ลลิตา ณิลังโส","Minniecocoa"],["กานดา แช่มศรีดิษฐ์","가안다✿"]] },
+  { name: "Crewboat ล้มแชมป์", players: [["Thanatorn Jamjang","Özíríz"],["Theerawat Mounchoung","༒ⓈɦѺѺTєⓇ"],["Supatchai Jarurnsast","หรรมท่องโลก"],["Pisamart Permpoon","Artbelieve"],["Chainarong Kramsombun","Lกฮ!"],["Apichat Wongchai","เทพบุตรสายเปย์"],["Prapon Muangcheingwarn","◢ᴅᴇᴇᴘ:ᴢᴇᴀ◤"],["Kongpan Yuttanavy","°NaVa°"],["Arthit Phonnikai","ᴏʟʏs͜͡ᴛʏʟᴇ"],["Thanatorn Jamjang 2","คนเลี้ยงหมาอ้วน☻"]] },
+  { name: "ขุนโต Slayer", players: [["ไวยากรณ์ อัปกาญจน์","TIM-ยื่นร่ายในดงตีง"],["ศศินภา สุขก้อน","TIM_ซัพกระดูกหมู"],["รัฐวุธ เรืองเดช","TIM-อังเคิ้ลเองลูก"],["ทองสถิต แก้วเขียว","TIM_เสือซุ่มในพุ่มไม้"],["ทัศนัยน์ เวชสนิท","เลิกโอนแล้วเพื่อนล้อ"],["อนุพงศ์ คล่องแคล่ว","Sodakudojin"],["ไขนภา ศรีลาพร","KsBeam"],["กำพล ศรีนวลขาว","TIM_AMAZON"],["มณฑล จันทร์เวชวิโรจน์","Dekfilmsix"]] }
+];
+
+const iconSVGs = [
+  `<svg viewBox="0 0 24 24"><path d="M14.5 2.5c0 1.5-1.5 7-1.5 7h-2S9.5 4 9.5 2.5a2.5 2.5 0 0 1 5 0zM12 11a1 1 0 1 0 0 2 1 1 0 0 0 0-2zm-4 8l-2 2 1.5 1 2-2-1.5-1zm8 0l-1.5 1 2 2 1.5-1-2-2z"/></svg>`,
+  `<svg viewBox="0 0 24 24"><path d="M12 2L2 7v5c0 5.25 4.15 10.19 10 11.38C17.85 22.19 22 17.25 22 12V7L12 2z"/></svg>`,
+  `<svg viewBox="0 0 24 24"><path d="M12 2a5 5 0 0 1 5 5c0 2.76-2.24 5-5 5S7 9.76 7 7a5 5 0 0 1 5-5zm0 12c5.33 0 8 2.67 8 4v2H4v-2c0-1.33 2.67-4 8-4z"/></svg>`,
+  `<svg viewBox="0 0 24 24"><path d="M7 2v2H5v2l2 1v2l-2 3h14l-2-3V7l2-1V4h-2V2H7zm5 16a3 3 0 0 0 3-3H9a3 3 0 0 0 3 3z"/></svg>`,
+  `<svg viewBox="0 0 24 24"><polygon points="12,2 15.09,8.26 22,9.27 17,14.14 18.18,21.02 12,17.77 5.82,21.02 7,14.14 2,9.27 8.91,8.26"/></svg>`,
+  `<svg viewBox="0 0 24 24"><path d="M5 3h14a2 2 0 0 1 2 2v6a10 10 0 0 1-10 10A10 10 0 0 1 3 11V5a2 2 0 0 1 2-2zm7 14a8 8 0 0 0 8-8V5H5v4h14v2H5a8 8 0 0 0 7 8z"/></svg>`,
+  `<svg viewBox="0 0 24 24"><path d="M12 2L2 12l10 10 10-10L12 2zm0 3.5L19.5 13 12 20.5 4.5 13 12 5.5z"/></svg>`,
+  `<svg viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-1 14H9V8h2v8zm4 0h-2V8h2v8z"/></svg>`,
+  `<svg viewBox="0 0 24 24"><path d="M21 3L3 10.53v.98l6.84 2.65L12.48 21h.98L21 3z"/></svg>`,
+  `<svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><path d="M19.07 4.93a10 10 0 0 1 0 14.14M4.93 4.93a10 10 0 0 0 0 14.14"/></svg>`,
+  `<svg viewBox="0 0 24 24"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>`,
+  `<svg viewBox="0 0 24 24"><path d="M3 13h8V3H3v10zm0 8h8v-6H3v6zm10 0h8V11h-8v10zm0-18v6h8V3h-8z"/></svg>`
+];
+
+const totalPlayers = teams.reduce((s, t) => s + t.players.length, 0);
+
+document.getElementById('statsBar').innerHTML = `
+  <div class="stat-pill"><div class="stat-num">${teams.length}</div><div class="stat-label">ทีมแข่งขัน</div></div>
+  <div class="stat-pill"><div class="stat-num">${totalPlayers}</div><div class="stat-label">ผู้เล่นทั้งหมด</div></div>
+`;
+
+const grid = document.getElementById('grid');
+
+teams.forEach((team, ti) => {
+  const card = document.createElement('div');
+  card.className = 'team-card';
+
+  const playerRows = team.players.map((p, i) => `
+    <div class="player-row">
+      <span class="player-num">${String(i+1).padStart(2,'0')}</span>
+      <div class="player-divider"></div>
+      <span class="player-name">${p[0]}</span>
+      <span class="player-sep">·</span>
+      <span class="player-char">${p[1]}</span>
+    </div>
+  `).join('');
+
+  card.innerHTML = `
+    <div class="team-header">
+      <div class="team-icon-wrap">${iconSVGs[ti % iconSVGs.length]}</div>
+      <div>
+        <div class="team-name">${team.name}</div>
+        <div class="team-meta">${team.players.length} PLAYERS</div>
+      </div>
+      <span class="team-num">TEAM ${String(ti+1).padStart(2,'0')}</span>
+    </div>
+    <div class="player-list">${playerRows}</div>
+  `;
+  grid.appendChild(card);
+});
+</script>
+</body>
+</html>
